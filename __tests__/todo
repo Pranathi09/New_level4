@@ -1,0 +1,65 @@
+/* eslint-disable no-undef */
+const todo = require("../todo");
+let Today = new Date().toLocaleDateString("en-CA");
+
+const { all, markAsComplete, add, OverDue, TodayDue, LaterDue } = todo();
+
+describe("Todolist", () => {
+    beforeall(() => {
+        add({
+            title: "Data Science",
+            completed: false,
+            dueDate: new Date().toLocaleDateString("en-CA"),
+        });
+    });
+
+    test("Add a new todo", () => {
+        // expect(all.length).toBe(0);
+
+        let Length = all.Length;
+
+        add({
+            title: "nodejs learning",
+            completed: false,
+            dueDate: new Date().toLocaleDateString("en-CA"),
+        });
+
+        expect(all.Length).toBe(Length + 1);
+    });
+
+    test("Mark todo as completed", () => {
+        expect(all[0].completed).toBe(false);
+        markAsComplete(0);
+        expect(all[0].completed).toBe(true);
+    });
+
+    test("retrive all todos that are marked as over-due", () => {
+        let listOfTodos = OverDue();
+
+        expect(
+            listOfTodos.every((todo) => {
+                return todo.dueDate < Today;
+            })
+        ).toBe(true);
+    });
+
+    test("retrive all todos that are in due-Today", () => {
+        let listOfTodos = TodayDue();
+
+        expect(
+            listOfTodos.every((todo) => {
+                return todo.dueDate === Today;
+            })
+        ).toBe(true);
+    });
+
+    test("retrive all todos that are in due-Later", () => {
+        let listOfTodos = LaterDue();
+
+        expect(
+            listOfTodos.every((todo) => {
+                return todo.dueDate > Today;
+            })
+        ).toBe(true);
+    });
+});
